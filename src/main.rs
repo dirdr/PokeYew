@@ -1,32 +1,33 @@
+use serde_json::json;
 use yew::prelude::*;
 use serde::{Deserialize};
+use gloo_net::http::Request;
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct Move {
-
+    pub name: String,
+    pub url: String
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct Moves {
     pub moves: Vec<Move>,
 }
 
 #[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct Ability {
-
+    pub name: String,
+    pub url: String
 }
 
-#[derive(Deserialize, Debug)]
-struct Abilities {
-    pub abilities: Vec<Ability>,
-}
-
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
 struct Pokemon {
+    pub name: String,
     pub id: i32,
-    pub abilities: Abilities,
-    pub moves: Moves,
-    pub name: String
 }
 
 struct PokemonComponent {
@@ -35,14 +36,7 @@ struct PokemonComponent {
 
 enum Msg {
     GetPokemon,
-    Response(String),
-}
-
-impl PokemonComponent {
-    fn deserialize(text: &str) -> serde_json::Result<()> {
-        let result: Pokemon = serde_json::from_str(&text)?;
-        Ok(())
-    }
+    ReceivedPokemon(Pokemon)
 }
 
 impl Component for PokemonComponent {
@@ -56,9 +50,19 @@ impl Component for PokemonComponent {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let onclick = ctx.link().callback(|_| Msg::GetPokemon);
+        
         html! {
             <div>
-                <h1>{"Je suis un Pokemon"}</h1>
+                <button {onclick}>{"Click"}</button>
+                <h1>
+                    {
+                        match self.pokemon.clone() {
+                            Some(pok) => pok.name,   
+                            None => String::from("No pokemon yet.."),
+                        }
+                    }
+                </h1>
             </div>
         }
     }
@@ -68,19 +72,24 @@ impl Component for PokemonComponent {
             Msg::GetPokemon => {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
-                    let request = reqwest::get("https://pokeapi.co/api/v2/pokemon/ditto").await.unwrap();
-                    let text = request.text().await.unwrap(); 
-                    link.send_message(Msg::Response(text));
+                    let fetched_pokemon: Pokemon = Request::get("https://pokeapi.co/api/v2/pokemon/ditto")
+                        .send()
+                        .await
+                        .unwrap()
+                        .json()
+                        .await
+                        .unwrap();
+                    link.send_message(Msg::ReceivedPokemon(fetched_pokemon));
                 });
                 false
             }
-            Msg::Response(text) => {
+            Msg::ReceivedPokemon(pokemon) => {
+                self.pokemon = Some(pokemon);
                 true
             }
         } 
     }
 }
-
 
 #[function_component(App)] 
 fn app() -> Html {
