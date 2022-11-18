@@ -1,6 +1,5 @@
-use serde_json::json;
 use yew::prelude::*;
-use serde::{Deserialize};
+use serde::Deserialize;
 use gloo_net::http::Request;
 
 #[derive(Deserialize, Debug)]
@@ -34,13 +33,13 @@ struct PokemonComponent {
     pub pokemon: Option<Pokemon>,
 }
 
-enum Msg {
+enum MsgPokemonComponent {
     GetPokemon,
-    ReceivedPokemon(Pokemon)
+    ReceivedPokemon(Pokemon),
 }
 
 impl Component for PokemonComponent {
-    type Message = Msg;
+    type Message = MsgPokemonComponent;
     type Properties = ();
 
     fn create(ctx: &Context<Self>) -> Self {
@@ -50,11 +49,14 @@ impl Component for PokemonComponent {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let onclick = ctx.link().callback(|_| Msg::GetPokemon);
-        
+        let onclick = ctx.link().callback(|_| MsgPokemonComponent::GetPokemon);
+        //let oninput = ctx.link().callback(|e: InputEvent| MsgPokemonComponent::UserInput(e.data().unwrap()));
         html! {
             <div>
-                <button {onclick}>{"Click"}</button>
+                <form>
+                    <input type="text" id="wantedPokemon"/>
+                    <input onclick={onclick} type="submit"/>
+                </form>
                 <h1>
                     {
                         match self.pokemon.clone() {
@@ -69,7 +71,7 @@ impl Component for PokemonComponent {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::GetPokemon => {
+            MsgPokemonComponent::GetPokemon => {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     let fetched_pokemon: Pokemon = Request::get("https://pokeapi.co/api/v2/pokemon/ditto")
@@ -79,11 +81,11 @@ impl Component for PokemonComponent {
                         .json()
                         .await
                         .unwrap();
-                    link.send_message(Msg::ReceivedPokemon(fetched_pokemon));
+                    link.send_message(MsgPokemonComponent::ReceivedPokemon(fetched_pokemon));
                 });
                 false
             }
-            Msg::ReceivedPokemon(pokemon) => {
+            MsgPokemonComponent::ReceivedPokemon(pokemon) => {
                 self.pokemon = Some(pokemon);
                 true
             }

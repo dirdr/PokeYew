@@ -629,11 +629,11 @@ function getImports() {
     imports.wbg.__wbindgen_throw = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbindgen_closure_wrapper1384 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper1381 = function(arg0, arg1, arg2) {
         const ret = makeClosure(arg0, arg1, 180, __wbg_adapter_22);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper4063 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper4061 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 207, __wbg_adapter_25);
         return addHeapObject(ret);
     };
@@ -673,7 +673,7 @@ function initSync(module) {
 
 async function init(input) {
     if (typeof input === 'undefined') {
-        input = new URL('pokeyew-4d2e8f91b519d2f8_bg.wasm', import.meta.url);
+        input = new URL('pokeyew-cd10ed472c21eaae_bg.wasm', import.meta.url);
     }
     const imports = getImports();
 
