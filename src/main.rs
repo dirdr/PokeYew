@@ -34,7 +34,7 @@ struct PokemonComponent {
 }
 
 enum MsgPokemonComponent {
-    GetPokemon,
+    GetPokemon(String),
     ReceivedPokemon(Pokemon),
 }
 
@@ -49,14 +49,8 @@ impl Component for PokemonComponent {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let onclick = ctx.link().callback(|_| MsgPokemonComponent::GetPokemon);
-        //let oninput = ctx.link().callback(|e: InputEvent| MsgPokemonComponent::UserInput(e.data().unwrap()));
         html! {
             <div>
-                <form>
-                    <input type="text" id="wantedPokemon"/>
-                    <input onclick={onclick} type="submit"/>
-                </form>
                 <h1>
                     {
                         match self.pokemon.clone() {
@@ -71,10 +65,11 @@ impl Component for PokemonComponent {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            MsgPokemonComponent::GetPokemon => {
+            MsgPokemonComponent::GetPokemon(requested_pokemon_name) => {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
-                    let fetched_pokemon: Pokemon = Request::get("https://pokeapi.co/api/v2/pokemon/ditto")
+                    let endpoint = format!("https://pokeapi.co/api/v2/pokemon/{}", requested_pokemon_name);
+                    let fetched_pokemon: Pokemon = Request::get(&endpoint)
                         .send()
                         .await
                         .unwrap()
@@ -93,11 +88,22 @@ impl Component for PokemonComponent {
     }
 }
 
+#[function_component(Form)]
+fn form() -> Html {
+    let state  = use_state(init_fn)
+    let pokemon_changed = Callback::from(move |requested_pokemon: String|)
+    html! {
+        <form>
+            <TextInput name="pokemon_name_request" handle_onchange={pokemon_changed}/>
+        </form>
+    }
+}
+
 #[function_component(App)] 
 fn app() -> Html {
     html! {
         <div>
-        <PokemonComponent/> 
+            <PokemonComponent/> 
         </div>
     }
 }
