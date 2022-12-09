@@ -90,12 +90,14 @@ impl Component for PokemonComponent {
 
 #[function_component(Form)]
 fn form() -> Html {
-    let state  = use_state(init_fn)
-    let pokemon_changed = Callback::from(move |requested_pokemon: String|)
+    let state = use_state(|| "");
+    let on_change= Callback::from(move |requested_pokemon: String| {
+        state.set(&requested_pokemon)
+    });
     html! {
-        <form>
-            <TextInput name="pokemon_name_request" handle_onchange={pokemon_changed}/>
-        </form>
+        <div>
+            <input type="text" name="pokemon_name_request" on_change={}/>
+        </div>
     }
 }
 
