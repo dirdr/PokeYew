@@ -1,33 +1,9 @@
+mod pokemon;
+
+use crate::pokemon::Pokemon;
 use yew::prelude::*;
-use serde::Deserialize;
 use gloo_net::http::Request;
-
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Move {
-    pub name: String,
-    pub url: String
-}
-
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Moves {
-    pub moves: Vec<Move>,
-}
-
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Ability {
-    pub name: String,
-    pub url: String
-}
-
-#[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
-struct Pokemon {
-    pub name: String,
-    pub id: i32,
-}
+use web_sys::HtmlInputElement;
 
 struct PokemonComponent {
     pub pokemon: Option<Pokemon>,
@@ -39,6 +15,7 @@ enum MsgPokemonComponent {
 }
 
 impl Component for PokemonComponent {
+
     type Message = MsgPokemonComponent;
     type Properties = ();
 
@@ -88,15 +65,18 @@ impl Component for PokemonComponent {
     }
 }
 
+
 #[function_component(Form)]
 fn form() -> Html {
-    let state = use_state(|| "");
-    let on_change= Callback::from(move |requested_pokemon: String| {
-        state.set(&requested_pokemon)
+    let pokemon_handle = use_state(|| "".to_string());
+    let handle_input = Callback::from(move |event: InputEvent| {
+        if let Some(input) = event.target_dyn_into::<HtmlInputElement>() {
+            pokemon_handle.set(input.value());
+        }
     });
     html! {
         <div>
-            <input type="text" name="pokemon_name_request" on_change={}/>
+            <input type="text" name="pokemon_name_request" oninput={handle_input}/>
         </div>
     }
 }
@@ -106,6 +86,7 @@ fn app() -> Html {
     html! {
         <div>
             <PokemonComponent/> 
+            <Form/>
         </div>
     }
 }
