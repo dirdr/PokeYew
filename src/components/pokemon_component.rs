@@ -55,7 +55,7 @@ impl Component for PokemonComponent {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     let endpoint = format!("https://pokeapi.co/api/v2/pokemon/{}", requested_pokemon_name);
-                    web_sys::console::log_1(&JsValue::from(&endpoint));
+                    //web_sys::console::log_1(&JsValue::from(&endpoint));
                     let fetched_pokemon: Pokemon = Request::get(&endpoint)
                         .send()
                         .await
