@@ -38,6 +38,11 @@ impl Component for PokemonComponent {
                         }
                     }
                 </h1>
+                <div>
+                    if let Some(exist) = self.pokemon.clone() {
+                        <img src={exist.sprites.front_default.unwrap()} alt="sprite"/>
+                    }
+                </div>
                 <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
             // the component, only one field in our case, the callback, should have the same name
             </div>

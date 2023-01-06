@@ -27,16 +27,9 @@ pub struct Abilities {
 }
 
 #[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct Sprites {
-    pub back_default: String,
-    pub back_female: String,
-    pub back_shiny: String,
-    pub back_shiny_famale: String,
-    pub front_default: String,
-    pub front_female: String,
-    pub front_shiny: String,
-    pub front_shiny_famale: String
+    pub front_default: Option<String>,
+    pub front_shiny: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -44,4 +37,5 @@ pub struct Sprites {
 pub struct Pokemon {
     pub name: String,
     pub id: i32,
+    pub sprites: Sprites,
 }
