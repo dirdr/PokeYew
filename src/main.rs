@@ -1,19 +1,17 @@
-mod pokemon;
-mod pokemon_component;
+mod components;
+mod structs;
+mod props;
 
-use crate::pokemon::Pokemon;
-use yew::prelude::*;
-use yew::Properties;
+extern crate self as pokeyew;
+
+use pokeyew::props::InputPokemonCallbackProps;
+use yew::{prelude::*};
 use web_sys::HtmlInputElement;
+use pokeyew::components::PokemonComponent;
 
-
-#[derive(Properties, PartialEq)]
-struct LinkProps {
-    pub emit: Callback<String>
-}
 
 #[function_component(Form)]
-fn form(props: &LinkProps) -> Html {
+fn form(props: &InputPokemonCallbackProps) -> Html {
     let pokemon_handle = use_state(|| "".to_string());
     let handle_input = Callback::from(move |event: InputEvent| {
         if let Some(input) = event.target_dyn_into::<HtmlInputElement>() {

@@ -1,4 +1,4 @@
-use crate::pokemon::Pokemon;
+use pokeyew::structs::Pokemon;
 use gloo_net::http::Request; 
 use yew::prelude::*;
 
@@ -6,7 +6,7 @@ pub struct PokemonComponent {
     pub pokemon: Option<Pokemon>,
 }
 
-enum MsgPokemonComponent {
+pub enum MsgPokemonComponent {
     GetPokemon(String),
     ReceivedPokemon(Pokemon),
 }
