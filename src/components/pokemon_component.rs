@@ -1,6 +1,8 @@
 use pokeyew::structs::Pokemon;
 use gloo_net::http::Request; 
+use wasm_bindgen::JsValue;
 use yew::prelude::*;
+use pokeyew::components::PokemonInputForm; 
 
 pub struct PokemonComponent {
     pub pokemon: Option<Pokemon>,
@@ -22,6 +24,10 @@ impl Component for PokemonComponent {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let link = ctx.link().clone();
+        let get_pokemon: Callback<String> = Callback::from(move |p_name: String| {
+            link.send_message(MsgPokemonComponent::GetPokemon(p_name.clone()))
+        });
         html! {
             <div>
                 <h1>
@@ -32,6 +38,8 @@ impl Component for PokemonComponent {
                         }
                     }
                 </h1>
+                <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
+            // the component, only one field in our case, the callback, should have the same name
             </div>
         }
     }
@@ -42,6 +50,7 @@ impl Component for PokemonComponent {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
                     let endpoint = format!("https://pokeapi.co/api/v2/pokemon/{}", requested_pokemon_name);
+                    web_sys::console::log_1(&JsValue::from(&endpoint));
                     let fetched_pokemon: Pokemon = Request::get(&endpoint)
                         .send()
                         .await

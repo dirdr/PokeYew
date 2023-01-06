@@ -1,2 +1,5 @@
 mod pokemon_component;
-pub use pokemon_component::PokemonComponent;
+mod form;
+
+pub use pokemon_component::{PokemonComponent, MsgPokemonComponent};
+pub use form::PokemonInputForm;
