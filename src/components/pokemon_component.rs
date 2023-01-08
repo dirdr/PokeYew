@@ -10,7 +10,7 @@ pub struct PokemonComponent {
 
 pub enum MsgPokemonComponent {
     GetPokemon(String),
-    ReceivedPokemon(Pokemon),
+    Received(Option<Pokemon>),
 }
 
 impl Component for PokemonComponent {
@@ -56,19 +56,18 @@ impl Component for PokemonComponent {
                 wasm_bindgen_futures::spawn_local(async move {
                     let endpoint = format!("https://pokeapi.co/api/v2/pokemon/{}", requested_pokemon_name);
                     //web_sys::console::log_1(&JsValue::from(&endpoint));
-                    let fetched_pokemon: Pokemon = Request::get(&endpoint)
+                    let fetched: Result<Pokemon, gloo_net::Error> = Request::get(&endpoint)
                         .send()
                         .await
                         .unwrap()
                         .json()
-                        .await
-                        .unwrap();
-                    link.send_message(MsgPokemonComponent::ReceivedPokemon(fetched_pokemon));
+                        .await;
+                    link.send_message(MsgPokemonComponent::Received(fetched.ok()));
                 });
                 false
             }
-            MsgPokemonComponent::ReceivedPokemon(pokemon) => {
-                self.pokemon = Some(pokemon);
+            MsgPokemonComponent::Received(fetched) => {
+                self.pokemon = fetched.clone();
                 true
             }
         } 
