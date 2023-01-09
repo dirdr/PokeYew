@@ -6,6 +6,7 @@ use pokeyew::components::PokemonInputForm;
 
 pub struct PokemonComponent {
     pub pokemon: Option<Pokemon>,
+    pub error_message: Option<String>,
 }
 
 pub enum MsgPokemonComponent {
@@ -17,9 +18,10 @@ impl Component for PokemonComponent {
     type Message = MsgPokemonComponent;
     type Properties = ();
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_ctx: &Context<Self>) -> Self {
         Self {
             pokemon: None,
+            error_message: None,
         }
     }
 
@@ -29,15 +31,13 @@ impl Component for PokemonComponent {
             link.send_message(MsgPokemonComponent::GetPokemon(p_name.clone()))
         });
         html! {
-            <div>
-                <h1>
-                    {
-                        match self.pokemon.clone() {
-                            Some(pok) => pok.name,   
-                            None => String::from("No pokemon yet.."),
-                        }
-                    }
-                </h1>
+            <div class="container">
+                if let Some(pokemon) = &self.pokemon {
+                    <h2>{pokemon.name.clone()}</h2> 
+                }
+                if let Some(t) = &self.error_message {
+                    <h2>{t}</h2>        
+                }
                 <div>
                     if let Some(exist) = self.pokemon.clone() {
                         <img src={exist.sprites.front_default.unwrap()} alt="sprite"/>
@@ -68,6 +68,7 @@ impl Component for PokemonComponent {
             }
             MsgPokemonComponent::Received(fetched) => {
                 self.pokemon = fetched.clone();
+                if let None = fetched {self.error_message = Some(String::from("Pokemon Not found!"))} else {self.error_message = None}
                 true
             }
         } 
