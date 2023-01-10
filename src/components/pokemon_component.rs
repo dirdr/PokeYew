@@ -31,21 +31,23 @@ impl Component for PokemonComponent {
             link.send_message(MsgPokemonComponent::GetPokemon(p_name.clone()))
         });
         html! {
-            <div class="container">
-                if let Some(pokemon) = &self.pokemon {
-                    <h2>{pokemon.name.clone()}</h2> 
-                }
-                if let Some(t) = &self.error_message {
-                    <h2>{t}</h2>        
-                }
-                <div>
-                    if let Some(exist) = self.pokemon.clone() {
-                        <img src={exist.sprites.front_default.unwrap()} alt="sprite"/>
+            <>
+                <div class="container">
+                    if let Some(pokemon) = &self.pokemon {
+                        <h2>{pokemon.name.clone()}</h2> 
                     }
+                    if let Some(t) = &self.error_message {
+                        <h2>{t}</h2>        
+                    }
+                    <div>
+                        if let Some(exist) = self.pokemon.clone() {
+                            <img src={exist.sprites.front_default.unwrap()} alt="sprite"/>
+                        }
+                    </div>
+                    <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
+                // the component, only one field in our case, the callback, should have the same name
                 </div>
-                <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
-            // the component, only one field in our case, the callback, should have the same name
-            </div>
+            </>
         }
     }
 
