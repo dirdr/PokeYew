@@ -10,9 +10,9 @@ use components::PokemonComponent;
 #[function_component(App)] 
 fn app() -> Html {
     html! {
-        <div>
+        <main class="container-fluid min-vh-100">
             <PokemonComponent/> 
-        </div>
+        </main>
     }
 }
 
