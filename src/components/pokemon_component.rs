@@ -31,8 +31,8 @@ impl Component for PokemonComponent {
             link.send_message(MsgPokemonComponent::GetPokemon(p_name.clone()))
         });
         html! {
-            <>
-                <div class="container">
+            <div class="container">
+                <div class="row">
                     if let Some(pokemon) = &self.pokemon {
                         <h2>{pokemon.name.clone()}</h2> 
                     }
@@ -45,9 +45,9 @@ impl Component for PokemonComponent {
                         }
                     </div>
                     <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
-                // the component, only one field in our case, the callback, should have the same name
                 </div>
-            </>
+            // the component, only one field in our case, the callback, should have the same name
+            </div>
         }
     }
 

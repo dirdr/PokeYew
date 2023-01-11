@@ -13,11 +13,11 @@ pub fn pokemon_input_form(props: &InputPokemonCallbackProps) -> Html {
     });
     let get_pokemon = props.get_pokemon.clone();
     html! {
-        <div>
+        <>
             <input type="text" name="pokemon_name_request" oninput={handle_input}/>
-            <button onclick = {move |_| 
+            <button type="button" class="btn btn-primary" onclick = {move |_| 
                 get_pokemon.emit(pokemon_value.clone())
             }>{"Submit"}</button>
-        </div>
+        </>
     }
 }
