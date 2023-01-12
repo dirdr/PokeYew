@@ -34,8 +34,14 @@ pub struct Sprites {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Type {
-    name: String,
-    url: String
+    pub name: String,
+    pub url: String
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Types {
+    pub slot: i32,
+    pub types: Vec<Type>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -44,4 +50,5 @@ pub struct Pokemon {
     pub name: String,
     pub id: i32,
     pub sprites: Sprites,
+    pub types: Types,
 }
