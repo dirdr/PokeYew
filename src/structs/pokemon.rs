@@ -33,6 +33,12 @@ pub struct Sprites {
 }
 
 #[derive(Deserialize, Debug, Clone)]
+pub struct Type {
+    name: String,
+    url: String
+}
+
+#[derive(Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Pokemon {
     pub name: String,
