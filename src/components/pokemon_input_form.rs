@@ -14,12 +14,14 @@ pub fn pokemon_input_form(props: &InputPokemonCallbackProps) -> Html {
     let get_pokemon = props.get_pokemon.clone();
     html! {
         <div class="container w-50">
-            <div class="row justify-content-center">
-                <input class="mb-3" type="text" name="pokemon_name_request" placeholder="search a pokemon..." oninput={handle_input}/>
-                <div class="w-50">
-                    <button type="button" class="btn btn-primary" onclick = {move |_| 
-                        get_pokemon.emit(pokemon_value.clone())
-                    }>{"Submit"}</button>
+            <div class="row">
+                <div class="input-group mb-3">
+                    <input class="form-control" type="text" name="pokemon_name_request" placeholder="search a pokemon..." oninput={handle_input}/>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary" onclick = {move |_| 
+                            get_pokemon.emit(pokemon_value.clone())
+                        }>{"Submit"}</button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -5,12 +5,13 @@ mod structs;
 mod props;
 
 use yew::prelude::*;
-use components::PokemonComponent;
+use components::{PokemonComponent, Header};
 
 #[function_component(App)] 
 fn app() -> Html {
     html! {
         <main class="container-fluid min-vh-100">
+            <Header/>
             <PokemonComponent/> 
         </main>
     }

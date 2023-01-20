@@ -50,5 +50,4 @@ pub struct Pokemon {
     pub name: String,
     pub id: i32,
     pub sprites: Sprites,
-    pub types: Types,
 }
