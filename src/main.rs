@@ -1,18 +1,18 @@
 extern crate self as pokeyew;
 
 mod components;
-mod structs;
 mod props;
+mod structs;
 
+use components::{Header, PokemonComponent};
 use yew::prelude::*;
-use components::{PokemonComponent, Header};
 
-#[function_component(App)] 
+#[function_component(App)]
 fn app() -> Html {
     html! {
         <main class="container-fluid min-vh-100">
             <Header/>
-            <PokemonComponent/> 
+            <PokemonComponent/>
         </main>
     }
 }
