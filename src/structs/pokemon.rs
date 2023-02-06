@@ -1,27 +1,23 @@
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct Move {
     pub name: String,
     pub url: String
 }
 
 #[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct Moves {
     pub moves: Vec<Move>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct Ability {
     pub name: String,
     pub url: String
 }
 
 #[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct Abilities {
     pub abilities: Vec<Ability>,
 }
@@ -39,16 +35,21 @@ pub struct Type {
 }
 
 #[derive(Deserialize, Debug, Clone)]
-pub struct Types {
+pub struct TypeInfo {
     pub slot: i32,
+    #[serde(rename = "type")]
+    pub type_field: Type,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct TypeArray {
     pub types: Vec<Type>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
-#[serde(rename_all = "camelCase")]
 pub struct Pokemon {
     pub name: String,
     pub id: i32,
     pub sprites: Sprites,
-    pub types: Vec<Types>,
+    pub types: Vec<TypeInfo>
 }
