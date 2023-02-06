@@ -1,8 +1,8 @@
+use gloo_net::http::Request;
+use pokeyew::components::PokemonInputForm;
 use pokeyew::structs::Pokemon;
-use gloo_net::http::Request; 
 use wasm_bindgen::JsValue;
 use yew::prelude::*;
-use pokeyew::components::PokemonInputForm; 
 
 pub struct PokemonComponent {
     pub pokemon: Option<Pokemon>,
@@ -11,7 +11,7 @@ pub struct PokemonComponent {
 
 pub enum MsgPokemonComponent {
     GetPokemon(String),
-    Received(Option<Pokemon>),
+    Received(Result<Pokemon, gloo_net::Error>),
 }
 
 impl Component for PokemonComponent {
@@ -34,21 +34,15 @@ impl Component for PokemonComponent {
             <div class="row min-vh-100 justify-content-center">
                 <div class="col-8 text-center">
                     <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
-                    <div class="row">
-                        <div class="col">
-                            if let Some(exist) = self.pokemon.clone() {
-                                <img src={exist.sprites.front_default.unwrap()} alt="sprite"/>
-                            }
-                        </div>
-                        <div class="col">
-                            if let Some(pokemon) = &self.pokemon {
-                                <h2>{pokemon.name.clone()}</h2> 
-                            }
-                            if let Some(t) = &self.error_message {
-                                <h2>{t}</h2>        
-                            }
-                        </div>
-                    </div>
+                    if let Some(exist) = self.pokemon.clone() {
+                        <img src={exist.sprites.front_default.unwrap()} alt="sprite"/>
+                    }
+                    if let Some(pokemon) = &self.pokemon {
+                        <h2>{pokemon.name.clone()}</h2>
+                    }
+                    if let Some(t) = &self.error_message {
+                        <h2>{t}</h2>
+                    }
                 </div>
             </div>
         }
@@ -59,23 +53,28 @@ impl Component for PokemonComponent {
             MsgPokemonComponent::GetPokemon(requested_pokemon_name) => {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
-                    let endpoint = format!("https://pokeapi.co/api/v2/pokemon/{}", requested_pokemon_name);
-                    //web_sys::console::log_1(&JsValue::from(&endpoint));
-                    let fetched: Result<Pokemon, gloo_net::Error> = Request::get(&endpoint)
-                        .send()
-                        .await
-                        .unwrap()
-                        .json()
-                        .await;
-                    link.send_message(MsgPokemonComponent::Received(fetched.ok()));
+                    let endpoint = format!(
+                        "https://pokeapi.co/api/v2/pokemon/{}",
+                        requested_pokemon_name
+                    );
+                    web_sys::console::log_1(&JsValue::from(&endpoint));
+                    let fetched: Result<Pokemon, gloo_net::Error> =
+                        Request::get(&endpoint).send().await.unwrap().json().await;
+                    web_sys::console::log_1(&JsValue::from(format!("{:?}", fetched)));
+                    link.send_message(MsgPokemonComponent::Received(fetched));
                 });
                 false
             }
             MsgPokemonComponent::Received(fetched) => {
-                self.pokemon = fetched.clone();
-                if let None = fetched {self.error_message = Some(String::from("Pokemon Not found!"))} else {self.error_message = None}
+                web_sys::console::log_1(&JsValue::from(format!("{:?}", fetched)));
+                self.pokemon = fetched.as_ref().ok().cloned();
+                if let Err(e) = fetched {
+                    self.error_message = Some(e.to_string())
+                } else {
+                    self.error_message = None
+                }
                 true
             }
-        } 
+        }
     }
 }
