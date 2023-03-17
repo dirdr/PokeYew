@@ -7,6 +7,9 @@ mod structs;
 use components::{Header, PokemonComponent};
 use yew::prelude::*;
 
+/*
+top level component for our application
+*/
 #[function_component(App)]
 fn app() -> Html {
     html! {

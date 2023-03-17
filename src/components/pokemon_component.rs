@@ -31,11 +31,11 @@ impl Component for PokemonComponent {
             link.send_message(MsgPokemonComponent::GetPokemon(p_name.clone()))
         });
         html! {
-            <div class="row min-vh-100 justify-content-center">
-                <div class="col-8 text-center">
+            <div class="row min-vh-100 justify-content-center" >
+                <div class="col-8 text-center" style="border: 1px solid black;">
                     <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
                     if let Some(exist) = &self.pokemon {
-                        <img src={exist.clone().sprites.front_default} alt="sprite"/> 
+                        <img src={exist.clone().sprites.front_default} alt="sprite"/>
                         <ul>
                             {
                                 exist.clone().types
@@ -75,12 +75,12 @@ impl Component for PokemonComponent {
                 false
             }
             MsgPokemonComponent::Received(fetched) => {
-                web_sys::console::log_1(&JsValue::from(format!("{:?}", fetched)));
-                self.pokemon = fetched.as_ref().ok().cloned();
-                if let Err(e) = fetched {
-                    self.error_message = Some(e.to_string())
+                if let Err(_) = fetched {
+                    self.error_message = Some(String::from("This pokemon doesn't exist"));
+                    self.pokemon = None;
                 } else {
-                    self.error_message = None
+                    self.error_message = None;
+                    self.pokemon = fetched.as_ref().ok().cloned();
                 }
                 true
             }
