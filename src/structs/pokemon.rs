@@ -26,6 +26,19 @@ pub struct Abilities {
 pub struct Sprites {
     pub front_default: Option<String>,
     pub front_shiny: Option<String>,
+    pub other: Other,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Other {
+    #[serde(rename = "official-artwork")]
+    pub official_artwork: OfficialArtwork,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct OfficialArtwork {
+    pub front_default: Option<String>,
+    pub back_default: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
