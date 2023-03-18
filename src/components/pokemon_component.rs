@@ -36,6 +36,7 @@ impl Component for PokemonComponent {
                     <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
                     if let Some(exist) = &self.pokemon {
                         <p><strong>{exist.clone().name}</strong></p>
+                        <p><strong>{format!("#{}", exist.clone().id)}</strong></p>
                         <img src={exist.clone().sprites.other.official_artwork.front_default} alt="sprite" style="width: auto; height: 50%; border: 1px solid white"/>
                         <ul style="list-style-type: none;">
                             {
