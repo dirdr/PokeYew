@@ -32,10 +32,10 @@ impl Component for PokemonComponent {
         });
         html! {
             <div class="row justify-content-center" >
-                <div class="col-8 text-center" style="border: 1px solid black;">
+                <div class="col-8 text-center" style="border: 1px solid white;">
                     <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
                     if let Some(exist) = &self.pokemon {
-                        <img src={exist.clone().sprites.other.official_artwork.front_default} alt="sprite" style="transform: scale(1)"/>
+                        <img src={exist.clone().sprites.other.official_artwork.front_default} alt="sprite" style="transform: scale(0.5)"/>
                         <ul style="list-style-type: none;">
                             {
                                 exist.clone()
@@ -43,7 +43,7 @@ impl Component for PokemonComponent {
                                     .iter()
                                     .map(|t| html! {
                                         <li>
-                                            <img src={format!("resources/types/{}.png", t.type_field.name.clone())} alt="type" style="transform: scale(1.5)"/>
+                                            <img src={format!("resources/types/{}.png", t.type_field.name.clone())} alt="type" style="transform: scale(1)"/>
                                         </li>
                                     })
                                     .collect::<Html>()
@@ -51,7 +51,7 @@ impl Component for PokemonComponent {
                         </ul>
                     }
                     if let Some(t) = &self.error_message {
-                        <h2>{t}</h2>
+                        <p>{t}</p>
                     }
                 </div>
             </div>

@@ -13,7 +13,7 @@ top level component for our application
 #[function_component(App)]
 fn app() -> Html {
     html! {
-        <main class="container-fluid min-vh-100">
+        <main class="container-fluid">
             <Header/>
             <PokemonComponent/>
         </main>
