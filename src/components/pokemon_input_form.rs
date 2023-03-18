@@ -16,7 +16,7 @@ pub fn pokemon_input_form(props: &InputPokemonCallbackProps) -> Html {
         <div class="w-50 mx-auto">
             <div class="row">
                 <div class="input-group mb-3">
-                    <input class="form-control" type="text" name="pokemon_name_request" placeholder="search a pokemon..." oninput={handle_input}/>
+                    <input class="form-control" type="text" name="pokemon_name_request" placeholder="search a pokemon by name or id..." oninput={handle_input}/>
                     <div class="input-group-append">
                         <button type="button" class="btn btn-primary" onclick = {move |_| 
                             get_pokemon.emit(pokemon_value.clone())

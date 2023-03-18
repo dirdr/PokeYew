@@ -31,11 +31,12 @@ impl Component for PokemonComponent {
             link.send_message(MsgPokemonComponent::GetPokemon(p_name.clone()))
         });
         html! {
-            <div class="row justify-content-center" >
+            <div class="row justify-content-center">
                 <div class="col-8 text-center" style="border: 1px solid white;">
                     <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
                     if let Some(exist) = &self.pokemon {
-                        <img src={exist.clone().sprites.other.official_artwork.front_default} alt="sprite" style="transform: scale(0.5)"/>
+                        <p><strong>{exist.clone().name}</strong></p>
+                        <img src={exist.clone().sprites.other.official_artwork.front_default} alt="sprite" style="width: auto; height: 50%; border: 1px solid white"/>
                         <ul style="list-style-type: none;">
                             {
                                 exist.clone()
@@ -43,7 +44,7 @@ impl Component for PokemonComponent {
                                     .iter()
                                     .map(|t| html! {
                                         <li>
-                                            <img src={format!("resources/types/{}.png", t.type_field.name.clone())} alt="type" style="transform: scale(1)"/>
+                                            <img src={format!("resources/types/{}.png", t.type_field.name.clone())} alt="type"/>
                                         </li>
                                     })
                                     .collect::<Html>()
