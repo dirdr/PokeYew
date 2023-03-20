@@ -35,22 +35,29 @@ impl Component for PokemonComponent {
                 <div class="col-8 text-center" style="border: 1px solid white;">
                     <PokemonInputForm {get_pokemon}/> // here inside brace is the Property we pass the
                     if let Some(exist) = &self.pokemon {
-                        <p><strong>{exist.clone().name}</strong></p>
-                        <p><strong>{format!("#{}", exist.clone().id)}</strong></p>
-                        <img src={exist.clone().sprites.other.official_artwork.front_default} alt="sprite" style="width: auto; height: 50%; border: 1px solid white"/>
-                        <ul style="list-style-type: none;">
-                            {
-                                exist.clone()
-                                    .types
-                                    .iter()
-                                    .map(|t| html! {
-                                        <li>
-                                            <img src={format!("resources/types/{}.png", t.type_field.name.clone())} alt="type"/>
-                                        </li>
-                                    })
-                                    .collect::<Html>()
-                            }
-                        </ul>
+                        <div class="row">
+                                <p><strong>{format!("{} #{}", exist.clone().name, exist.clone().id)}</strong></p>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                <img src={exist.clone().sprites.other.official_artwork.front_default} alt="sprite" style="width: auto; height: 70%; border: 1px solid white"/>
+                            </div>
+                            <div class="col">
+                                <ul class="list-inline" style="list-style-type: none;">
+                                    {
+                                        exist.clone()
+                                            .types
+                                            .iter()
+                                            .map(|t| html! {
+                                                <li class="list-inline-item mx-3">
+                                                    <img src={format!("resources/types/{}.png", t.type_field.name.clone())} alt="type" style="width:150%; height: auto;"/>
+                                                </li>
+                                            })
+                                            .collect::<Html>()
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     }
                     if let Some(t) = &self.error_message {
                         <p>{t}</p>
