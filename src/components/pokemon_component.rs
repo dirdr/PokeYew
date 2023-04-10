@@ -1,17 +1,19 @@
 use gloo_net::http::Request;
 use pokeyew::components::PokemonInputForm;
 use pokeyew::structs::Pokemon;
-use wasm_bindgen::JsValue;
+use pokeyew::structs::Species;
 use yew::prelude::*;
 
 pub struct PokemonComponent {
     pub pokemon: Option<Pokemon>,
+    pub Species: Option<Species>,
     pub error_message: Option<String>,
 }
 
 pub enum MsgPokemonComponent {
     GetPokemon(String),
-    Received(Result<Pokemon, gloo_net::Error>),
+    ReceivedPokemon(Result<Pokemon, gloo_net::Error>),
+    ReceivedSpecies(Result<Species, gloo_net::Error>),
 }
 
 impl Component for PokemonComponent {
@@ -72,19 +74,33 @@ impl Component for PokemonComponent {
             MsgPokemonComponent::GetPokemon(requested_pokemon_name) => {
                 let link = ctx.link().clone();
                 wasm_bindgen_futures::spawn_local(async move {
-                    let endpoint = format!(
+                    let pokemon_endpoint = format!(
                         "https://pokeapi.co/api/v2/pokemon/{}",
                         requested_pokemon_name
                     );
-                    web_sys::console::log_1(&JsValue::from(&endpoint));
-                    let fetched: Result<Pokemon, gloo_net::Error> =
-                        Request::get(&endpoint).send().await.unwrap().json().await;
-                    web_sys::console::log_1(&JsValue::from(format!("{:?}", fetched)));
-                    link.send_message(MsgPokemonComponent::Received(fetched));
+                    let species_endpoint = format!(
+                        "https://pokeapi.co/api/v2/pokemon-species/{}",
+                        requested_pokemon_name
+                    );
+                    let fetched_pokemon: Result<Pokemon, gloo_net::Error> =
+                        Request::get(&pokemon_endpoint)
+                            .send()
+                            .await
+                            .unwrap()
+                            .json()
+                            .await;
+                    let fetched_species: Result<Species, gloo_net::Error> =
+                        Request::get(&species_endpoint)
+                            .send()
+                            .await
+                            .unwrap()
+                            .json()
+                            .await;
+                    link.send_message(MsgPokemonComponent::ReceivedPokemon(fetched_pokemon));
                 });
                 false
             }
-            MsgPokemonComponent::Received(fetched) => {
+            MsgPokemonComponent::ReceivedPokemon(fetched) => {
                 if let Err(_) = fetched {
                     self.error_message = Some(String::from("This pokemon doesn't exist"));
                     self.pokemon = None;
@@ -94,6 +110,20 @@ impl Component for PokemonComponent {
                 }
                 true
             }
+            MsgPokemonComponent::ReceivedSpecies(fetched) => {
+                if let Err(_) = fetched {
+                    self.error_message = Some(String::from("This pokemon doesn't exist"));
+                    self.Species = None;
+                } else {
+                    self.error_message = None;
+                    self.Species = fetched.as_ref().ok().cloned();
+                }
+                true
+            }
         }
     }
+}
+ 
+fn received<T>(fetched: T) -> () {
+    ()
 }
